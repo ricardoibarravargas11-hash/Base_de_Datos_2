@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Portafolio - Base de Datos II</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #f0f4fc;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .card {
+            max-width: 1200px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0, 20, 50, 0.12);
+            overflow: hidden;
+            border: 1px solid rgba(0, 70, 150, 0.06);
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: linear-gradient(135deg, #0a2a44 0%, #1b4a7a 100%);
+            padding: 16px 32px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid #f0c040;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-left .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .nav-left .logo i {
+            color: #f0c040;
+            font-size: 1.6rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            border-bottom: 2px solid transparent;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #fff;
+            border-bottom-color: #f0c040;
+        }
+
+        .nav-right .user-badge {
+            color: #fff;
+            font-weight: 500;
+            background: rgba(240, 192, 64, 0.2);
+            padding: 6px 20px;
+            border-radius: 40px;
+            border: 1px solid rgba(240, 192, 64, 0.25);
+            font-size: 0.9rem;
+        }
+
+        /* ===== CONTENIDO ===== */
+        .main-content {
+            padding: 30px 32px 40px;
+        }
+
+        /* HEADER */
+        .header-title {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .header-title .inst {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-title .inst h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0a2a44;
+        }
+
+        .header-title .estudiante {
+            background: #eef4fa;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            color: #0a2a44;
+            font-weight: 600;
+            border: 1px solid #c0d4e8;
+        }
+
+        .header-title .estudiante i {
+            margin-right: 8px;
+            color: #b8860b;
+        }
+
+        /* TÍTULO PORTAFOLIO */
+        .portafolio-titulo {
+            margin: 12px 0 16px 0;
+            border-left: 6px solid #f0c040;
+            padding-left: 18px;
+        }
+
+        .portafolio-titulo h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0a2a44;
+        }
+
+        .portafolio-titulo .subtitulo {
+            color: #2c5778;
+            font-size: 0.9rem;
+            margin-top: 4px;
+            font-weight: 400;
+            background: #f0f5fb;
+            display: inline-block;
+            padding: 4px 18px;
+            border-radius: 40px;
+        }
+
+        .portafolio-titulo .subtitulo i {
+            color: #b8860b;
+            margin-right: 6px;
+        }
+
+        /* ===== UNIDADES (resumen) ===== */
+        .unidades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0 28px 0;
+        }
+
+        .unidad-card {
+            background: #f8faff;
+            border-radius: 16px;
+            padding: 18px 14px 16px;
+            border: 1px solid #dbe6f2;
+            transition: 0.2s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .unidad-card:hover {
+            transform: translateY(-3px);
+            border-color: #b0cce0;
+            box-shadow: 0 8px 20px rgba(10, 42, 68, 0.08);
+        }
+
+        .unidad-card .nombre {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #0a2a44;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .unidad-card .nombre i {
+            color: #b8860b;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .unidad-card .talento {
+            font-size: 0.8rem;
+            color: #3d6b8f;
+            font-weight: 500;
+            margin: 4px 0 8px 0;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed #d0ddee;
+        }
+
+        .unidad-card .desc-corta {
+            font-size: 0.8rem;
+            color: #1f405c;
+            line-height: 1.4;
+        }
+
+        .unidad-card .desc-corta i {
+            color: #b8860b;
+            margin-right: 4px;
+        }
+
+        .unidad-card .badge-avance {
+            margin-top: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #0a2a44;
+            background: #e3edf7;
+            padding: 3px 14px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+
+        /* ===== PERFIL ESPECIAL ===== */
+        .perfil-especial {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e4eefa 100%);
+            border: 2px solid #b8cfe0;
+            border-radius: 18px;
+            padding: 24px 28px;
+            margin: 10px 0 28px 0;
+            scroll-margin-top: 80px;
+        }
+
+        .perfil-especial .nombre-destacado {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0a2a44;
+        }
+
+        .perfil-especial .sub-rol {
+            font-size: 0.95rem;
+            color: #1f4a6b;
+            margin: 4px 0 10px 0;
+        }
+
+        .perfil-especial .sub-rol i {
+            color: #b8860b;
+            margin-right: 6px;
+        }
+
+        .perfil-especial .descripcion {
+            color: #1f405c;
+            line-height: 1.6;
+            max-width: 800px;
+            font-size: 0.92rem;
+            margin: 8px 0 14px 0;
+        }
+
+        .perfil-especial .descripcion i {
+            color: #b8860b;
+            margin-right: 4px;
+        }
+
+        .perfil-especial .btn-volver {
+            display: inline-block;
+            background: #0a2a44;
+            color: #fff;
+            padding: 8px 24px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .perfil-especial .btn-volver i {
+            margin-right: 8px;
+        }
+
+        .perfil-especial .btn-volver:hover {
+            background: #1b4a7a;
+        }
+
+        /* ===== SECCIÓN TAREAS ===== */
+        .tareas-section {
+            margin: 30px 0 20px 0;
+            scroll-margin-top: 80px;
+        }
+
+        .tareas-section h2 {
+            font-size: 1.5rem;
+            color: #0a2a44;
+            border-bottom: 3px solid #f0c040;
+            padding-bottom: 10px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tareas-section h2 i {
+            color: #b8860b;
+        }
+
+        .unidad-semana {
+            background: #fafcff;
+            border-radius: 18px;
+            border: 1px solid #dbe6f2;
+            margin-bottom: 28px;
+            overflow: hidden;
+        }
+
+        .unidad-semana .header-unidad {
+            background: linear-gradient(135deg, #0a2a44 0%, #1b4a7a 100%);
+            padding: 14px 22px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .unidad-semana .header-unidad h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .unidad-semana .header-unidad h3 i {
+            color: #f0c040;
+        }
+
+        .unidad-semana .header-unidad .talento-tag {
+            background: rgba(240, 192, 64, 0.2);
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(240, 192, 64, 0.3);
+        }
+
+        .semanas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            padding: 18px 22px;
+        }
+
+        .semana-card {
+            background: #f8faff;
+            border-radius: 14px;
+            border: 1px solid #e0eaf3;
+            padding: 16px 16px 14px;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .semana-card:hover {
+            border-color: #b0cce0;
+            box-shadow: 0 4px 12px rgba(10, 42, 68, 0.06);
+        }
+
+        .semana-card .semana-titulo {
+            font-weight: 700;
+            color: #0a2a44;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .semana-card .semana-titulo i {
+            color: #b8860b;
+            font-size: 0.9rem;
+        }
+
+        .semana-card .tema-semana {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #1f4a6b;
+            margin-bottom: 2px;
+        }
+
+        .semana-card .tematica {
+            font-size: 0.75rem;
+            color: #4f7a9b;
+            margin-bottom: 10px;
+            background: #eef4fa;
+            padding: 2px 12px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+
+        .semana-card .tarea-box {
+            border: 2px dashed #d0ddee;
+            border-radius: 12px;
+            padding: 12px 10px;
+            text-align: center;
+            color: #5f7f9e;
+            font-size: 0.8rem;
+            background: #fafdff;
+            transition: 0.2s;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70px;
+        }
+
+        .semana-card .tarea-box:hover {
+            background: #f0f7ff;
+            border-color: #8eb0cc;
+        }
+
+        .semana-card .tarea-box i {
+            font-size: 1.3rem;
+            color: #b0cce0;
+            margin-bottom: 4px;
+        }
+
+        .semana-card .tarea-box .texto {
+            font-weight: 400;
+        }
+
+        .semana-card .github-link {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            color: #0a2a44;
+            background: #eef4fa;
+            padding: 4px 14px 4px 10px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+            align-self: flex-start;
+        }
+
+        .semana-card .github-link i {
+            color: #24292e;
+            font-size: 0.9rem;
+        }
+
+        .semana-card .github-link:hover {
+            background: #dce6f0;
+        }
+
+        /* ===== INFORMACIÓN DEL PORTAFOLIO ===== */
+        .info-portafolio {
+            background: #fafcff;
+            border-radius: 20px;
+            border: 1px solid #dbe6f2;
+            padding: 22px 26px;
+            margin: 24px 0 16px 0;
+            scroll-margin-top: 80px;
+        }
+
+        .info-portafolio h3 {
+            font-size: 1.2rem;
+            color: #0a2a44;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-portafolio h3 i {
+            color: #b8860b;
+        }
+
+        .info-portafolio .grid-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px 30px;
+        }
+
+        .info-portafolio .item {
+            display: flex;
+            flex-direction: column;
+            padding: 6px 0;
+            border-bottom: 1px solid #e8eef6;
+        }
+
+        .info-portafolio .item .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: #4f7a9b;
+            font-weight: 600;
+        }
+
+        .info-portafolio .item .value {
+            font-weight: 500;
+            color: #0a2a44;
+            font-size: 0.95rem;
+            margin-top: 2px;
+        }
+
+        .info-portafolio .item .value i {
+            margin-right: 6px;
+            color: #b8860b;
+        }
+
+        .info-portafolio .btn-volver-info {
+            display: inline-block;
+            margin-top: 16px;
+            color: #0a2a44;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .info-portafolio .btn-volver-info i {
+            margin-right: 6px;
+        }
+
+        .info-portafolio .btn-volver-info:hover {
+            color: #1b4a7a;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer-card {
+            background: #eef4fa;
+            padding: 14px 32px;
+            font-size: 0.8rem;
+            color: #2c5778;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border-top: 1px solid #c8d8e8;
+        }
+
+        .footer-card a {
+            color: #0a2a44;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 700px) {
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .nav-left {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .nav-links {
+                justify-content: center;
+            }
+            .nav-right {
+                text-align: center;
+            }
+            .header-title {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .portafolio-titulo h1 {
+                font-size: 1.6rem;
+            }
+            .perfil-especial {
+                padding: 18px 20px;
+            }
+            .perfil-especial .nombre-destacado {
+                font-size: 1.3rem;
+            }
+            .semanas-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 16px;
+            }
+            .navbar {
+                padding: 12px 16px;
+            }
+            .unidades-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .semanas-grid {
+                grid-template-columns: 1fr;
+            }
+            .info-portafolio .grid-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <!-- ===== NAVBAR ===== -->
+        <div class="navbar">
+            <div class="nav-left">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i> UPLA
+                </div>
+                <div class="nav-links">
+                    <a href="#" class="active" data-target="inicio"><i class="fas fa-home"></i> Inicio</a>
+                    <a href="#tareas" data-target="tareas"><i class="fas fa-tasks"></i> Tareas</a>
+                    <a href="#perfil" data-target="perfil"><i class="fas fa-user-circle"></i> Perfil</a>
+                    <a href="#informacion" data-target="informacion"><i class="fas fa-info-circle"></i> Información</a>
+                </div>
+            </div>
+            <div class="nav-right">
+                <span class="user-badge"><i class="fas fa-user-astronaut"></i> Ricardo Ibarra V. · 5to ciclo</span>
+            </div>
+        </div>
+
+        <!-- ===== CONTENIDO ===== -->
+        <div class="main-content">
+
+            <!-- HEADER -->
+            <div class="header-title">
+                <div class="inst">
+                    <i class="fas fa-university" style="font-size: 2rem; color: #0a2a44;"></i>
+                    <h2>UNIVERSIDAD PERUANA LOS ANDES</h2>
+                </div>
+                <div class="estudiante">
+                    <i class="fas fa-id-badge"></i> Ricardo Ibarra Vargas · 5to ciclo
+                </div>
+            </div>
+
+            <!-- TÍTULO PORTAFOLIO -->
+            <div class="portafolio-titulo">
+                <h1>Mi Portafolio de Trabajos</h1>
+                <div class="subtitulo">
+                    <i class="fas fa-star"></i> Base de Datos II · 2026-I · Inspirado en Hololive Myth
+                </div>
+            </div>
+
+            <!-- ===== UNIDADES (resumen) ===== -->
+            <div id="inicio">
+                <div class="unidades-grid">
+                    <div class="unidad-card">
+                        <div class="nombre"><i class="fas fa-archway"></i> Unidad I</div>
+                        <div class="talento">Gawr Gura · Arquitectura</div>
+                        <div class="desc-corta"><i class="fas fa-database"></i> Arquitecturas DBMS, configuración y despliegue.</div>
+                        <span class="badge-avance">Avance 25%</span>
+                    </div>
+                    <div class="unidad-card">
+                        <div class="nombre"><i class="fas fa-server"></i> Unidad II</div>
+                        <div class="talento">Amelia Watson · Instancias</div>
+                        <div class="desc-corta"><i class="fas fa-hdd"></i> Gestión de memoria, archivos e índices.</div>
+                        <span class="badge-avance">Avance 50%</span>
+                    </div>
+                    <div class="unidad-card">
+                        <div class="nombre"><i class="fas fa-shield-alt"></i> Unidad III</div>
+                        <div class="talento">Takanashi Kiara · Seguridad</div>
+                        <div class="desc-corta"><i class="fas fa-lock"></i> Privilegios, backups y alta disponibilidad.</div>
+                        <span class="badge-avance">Avance 75%</span>
+                    </div>
+                    <div class="unidad-card">
+                        <div class="nombre"><i class="fas fa-chart-line"></i> Unidad IV</div>
+                        <div class="talento">Mori Calliope · Monitoreo</div>
+                        <div class="desc-corta"><i class="fas fa-tachometer-alt"></i> Tuning, flashback y rendimiento.</div>
+                        <span class="badge-avance">Avance 100%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== PERFIL ===== -->
+            <div id="perfil" class="perfil-especial">
+                <div class="nombre-destacado">Ricardo Ibarra Vargas</div>
+                <div class="sub-rol"><i class="fas fa-user-graduate"></i> ESTUDIANTE DE INGENIERÍA – UPLA</div>
+                <div class="sub-rol" style="font-style: italic; color: #b8860b; font-size: 0.85rem;">
+                    <i class="fas fa-crown"></i> Bajo la tutela de la Grande Priestess, Ninomae Ina'nis
+                </div>
+                <div class="descripcion">
+                    <i class="fas fa-quote-left" style="opacity: 0.6;"></i>
+                    Bienvenido a mi perfil. Soy estudiante de la Facultad de Ingeniería de la Universidad Peruana Los Andes y en este portafolio presento mis avances técnicos en la asignatura <strong>BASE DE DATOS II</strong>. Cada unidad del curso está inspirada en un talent de Hololive Myth, y este perfil descansa bajo el manto arcano de Ina'nis mientras fortalezco mis habilidades en administración de bases de datos, seguridad, monitoreo y optimización.
+                    <i class="fas fa-quote-right" style="opacity: 0.6;"></i>
+                </div>
+                <a class="btn-volver" onclick="scrollToInicio()"><i class="fas fa-arrow-left"></i> Volver al Inicio</a>
+            </div>
+
+            <!-- ===== SECCIÓN TAREAS ===== -->
+            <div id="tareas" class="tareas-section">
+                <h2><i class="fas fa-clipboard-list"></i> Tareas por Semanas</h2>
+
+                <!-- UNIDAD I: Semanas 1-4 -->
+                <div class="unidad-semana">
+                    <div class="header-unidad">
+                        <h3><i class="fas fa-archway"></i> UNIDAD I: Arquitecturas de Bases de Datos</h3>
+                        <span class="talento-tag"><i class="fas fa-fish"></i> Gawr Gura — el abismo de las bases de datos</span>
+                    </div>
+                    <div class="semanas-grid">
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 1</div>
+                            <div class="tema-semana">Formulación del Proyecto y Selección de Arquitectura</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Gawr Gura</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 2</div>
+                            <div class="tema-semana">Despliegue y Configuración de DBMS</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Gawr Gura</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 3</div>
+                            <div class="tema-semana">Modelamiento Físico y Mecanismos de Integración</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Gawr Gura</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 4</div>
+                            <div class="tema-semana">Sustentación y Validación de Infraestructura</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Gawr Gura</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UNIDAD II: Semanas 5-8 -->
+                <div class="unidad-semana">
+                    <div class="header-unidad">
+                        <h3><i class="fas fa-server"></i> UNIDAD II: Gestión de Instancias y Almacenamiento</h3>
+                        <span class="talento-tag"><i class="fas fa-clock"></i> Amelia Watson — investigando cada componente</span>
+                    </div>
+                    <div class="semanas-grid">
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 5</div>
+                            <div class="tema-semana">Configuración de Instancia y Gestión de Memoria</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Amelia Watson</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 6</div>
+                            <div class="tema-semana">Arquitectura Física de Almacenamiento</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Amelia Watson</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 7</div>
+                            <div class="tema-semana">Organización de Esquemas Lógicos e Indexación</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Amelia Watson</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 8</div>
+                            <div class="tema-semana">Sustentación y Pruebas de Carga</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Amelia Watson</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UNIDAD III: Semanas 9-12 -->
+                <div class="unidad-semana">
+                    <div class="header-unidad">
+                        <h3><i class="fas fa-shield-alt"></i> UNIDAD III: Seguridad y Alta Disponibilidad</h3>
+                        <span class="talento-tag"><i class="fas fa-fire"></i> Takanashi Kiara — energía de fénix en cada práctica</span>
+                    </div>
+                    <div class="semanas-grid">
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 9</div>
+                            <div class="tema-semana">Configuración de Conectividad de Red y Seguridad</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Takanashi Kiara</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 10</div>
+                            <div class="tema-semana">Gestión de Privilegios, Roles y Auditoría</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Takanashi Kiara</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 11</div>
+                            <div class="tema-semana">Estrategias de Backups Avanzados y Jobs</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Takanashi Kiara</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 12</div>
+                            <div class="tema-semana">Recuperación ante Fallos y Planes de Contingencia</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Takanashi Kiara</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UNIDAD IV: Semanas 13-16 -->
+                <div class="unidad-semana">
+                    <div class="header-unidad">
+                        <h3><i class="fas fa-chart-line"></i> UNIDAD IV: Monitoreo y Optimización</h3>
+                        <span class="talento-tag"><i class="fas fa-skull"></i> Mori Calliope — la cosecha final del proyecto</span>
+                    </div>
+                    <div class="semanas-grid">
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 13</div>
+                            <div class="tema-semana">Auditoría, Monitoreo de Eventos y Alertas</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Mori Calliope</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 14</div>
+                            <div class="tema-semana">Afinamiento y Optimización de Consultas (Tuning)</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Mori Calliope</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 15</div>
+                            <div class="tema-semana">Implementación de Tecnologías de Recuperación Flashback</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Mori Calliope</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                        <div class="semana-card">
+                            <div class="semana-titulo"><i class="far fa-calendar-alt"></i> Semana 16</div>
+                            <div class="tema-semana">Sustentación Final e Integración del Proyecto</div>
+                            <span class="tematica"><i class="fas fa-tag"></i> Temática: Mori Calliope</span>
+                            <div class="tarea-box">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="texto">Aquí irá tu tarea</span>
+                            </div>
+                            <a href="#" class="github-link"><i class="fab fa-github"></i> Ver carpeta en GitHub</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== INFORMACIÓN DEL PORTAFOLIO ===== -->
+            <div id="informacion" class="info-portafolio">
+                <h3><i class="fas fa-info-circle"></i> Información del Portafolio</h3>
+                <div class="grid-info">
+                    <div class="item">
+                        <span class="label"><i class="fas fa-user"></i> Estudiante</span>
+                        <span class="value">Ricardo Ibarra Vargas</span>
+                    </div>
+                    <div class="item">
+                        <span class="label"><i class="fas fa-university"></i> Universidad</span>
+                        <span class="value">Universidad Peruana Los Andes</span>
+                    </div>
+                    <div class="item">
+                        <span class="label"><i class="fas fa-laptop"></i> Facultad</span>
+                        <span class="value">Ingeniería de Sistemas y Computación</span>
+                    </div>
+                    <div class="item">
+                        <span class="label"><i class="fas fa-book"></i> Asignatura</span>
+                        <span class="value">Base de Datos II</span>
+                    </div>
+                    <div class="item">
+                        <span class="label"><i class="fas fa-mask"></i> Temática</span>
+                        <span class="value">Hololive Myth (Gura · Amelia · Kiara · Calliope · Ina)</span>
+                    </div>
+                    <div class="item">
+                        <span class="label"><i class="fas fa-calendar"></i> Año Académico</span>
+                        <span class="value">2026-I</span>
+                    </div>
+                    <div class="item">
+                        <span class="label"><i class="fas fa-user-tie"></i> Docente</span>
+                        <span class="value">Mg. Raúl Enrique Fernández Bejarano</span>
+                    </div>
+                    <div class="item">
+                        <span class="label"><i class="fas fa-code-branch"></i> Ciclo</span>
+                        <span class="value">5to ciclo</span>
+                    </div>
+                </div>
+                <a class="btn-volver-info" onclick="scrollToInicio()"><i class="fas fa-arrow-left"></i> Volver al Inicio</a>
+            </div>
+
+            <!-- Leyenda de la asignatura -->
+            <div style="font-size:0.82rem; color:#1f4a6b; background:#f4f9ff; padding:10px 18px; border-radius:40px; display:inline-block; margin-top:4px;">
+                <i class="fas fa-book-open" style="margin-right:8px; color:#b8860b;"></i> Sumilla: Administración de bases de datos con DBMS vigentes · Arquitectura, seguridad, monitoreo y flashback.
+            </div>
+
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <div class="footer-card">
+            <span><i class="far fa-copyright"></i> 2026 · Universidad Peruana Los Andes · Facultad de Ingeniería</span>
+            <span>
+                <a href="#"><i class="fab fa-github"></i> Repositorio</a> &nbsp;·&nbsp;
+                <a href="#"><i class="fas fa-file-pdf"></i> Sílabo oficial</a>
+            </span>
+        </div>
+    </div>
+
+    <script>
+        // Función para hacer scroll suave al inicio
+        function scrollToInicio() {
+            document.getElementById('inicio').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+            // Actualizar enlace activo
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+            document.querySelector('.nav-links a[data-target="inicio"]').classList.add('active');
+        }
+
+        // Función para actualizar el enlace activo según la sección visible
+        function updateActiveLink() {
+            const sections = ['inicio', 'tareas', 'perfil', 'informacion'];
+            const scrollPosition = window.scrollY + 100;
+
+            let currentSection = 'inicio';
+            sections.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    const offsetTop = element.offsetTop;
+                    const offsetBottom = offsetTop + element.offsetHeight;
+                    if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
+                        currentSection = id;
+                    }
+                }
+            });
+
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-target') === currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Agregar event listeners a los enlaces de navegación
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar los enlaces de navegación
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const target = this.getAttribute('data-target');
+                    if (target === 'inicio') {
+                        e.preventDefault();
+                        scrollToInicio();
+                    } else {
+                        // Para los otros enlaces, el href ya tiene el # correspondiente
+                        // El scroll suave lo maneja CSS con scroll-behavior: smooth
+                        // Actualizamos la clase active después del clic
+                        setTimeout(() => {
+                            document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+                            this.classList.add('active');
+                        }, 100);
+                    }
+                });
+            });
+
+            // Detectar scroll para actualizar el enlace activo
+            window.addEventListener('scroll', updateActiveLink);
+
+            // Ejecutar una vez al cargar
+            setTimeout(updateActiveLink, 500);
+        });
+    </script>
+</body>
+</html>
