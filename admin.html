@@ -47,7 +47,7 @@ const b64=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r
 async function apiError(r){let j={};try{j=await r.json()}catch{};return j.message||("HTTP "+r.status)}
 function showPreview(name,url,type){
  $("modalTitle").textContent=name; const b=$("modalBody"); b.innerHTML="";
- if(type==="PDF") b.innerHTML='<iframe class="preview-frame" src="https://docs.google.com/gview?embedded=1&url='+encodeURIComponent(url)+'"></iframe><div style="padding:10px;text-align:center"><a class="btn secondary small" target="_blank" rel="noopener" href="'+url+'">Abrir PDF en una pestaña ↗</a></div>';
+ if(type==="PDF") b.innerHTML='<embed class="preview-frame" type="application/pdf" src="'+url+'"><div style="padding:10px;text-align:center"><a class="btn secondary small" target="_blank" rel="noopener" href="'+url+'">Abrir PDF en una pestaña ↗</a></div>';
  else b.innerHTML='<img class="preview-image" src="'+url+'" alt="'+name+'">';
  $("modal").classList.add("open");
 }
