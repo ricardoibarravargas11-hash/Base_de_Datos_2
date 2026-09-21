@@ -4,17 +4,17 @@
 <div id="modal" class="modal"><div class="modal-box"><div class="modal-head"><strong id="modalTitle">Vista previa</strong><button class="modal-close" id="closeModal">Cerrar ✕</button></div><div id="modalBody" style="flex:1;min-height:0"></div></div></div>
 <footer>Base de Datos II · UPLA</footer>
 <script>
-const p=new URLSearchParams(location.search),w=Math.min(16,Math.max(1,Number(p.get("semana"))||1)),u=w<=4?1:w<=8?2:w<=12?3:4;
+const site="https://ricardoibarravargas11-hash.github.io/Base_de_Datos_2/"; const p=new URLSearchParams(location.search),w=Math.min(16,Math.max(1,Number(p.get("semana"))||1)),u=w<=4?1:w<=8?2:w<=12?3:4;
 document.getElementById("unit").textContent="UNIDAD "+String(u).padStart(2,"0")+" · SEMANA "+String(w).padStart(2,"0");
 document.getElementById("title").textContent="Semana "+w;
 const box=document.getElementById("resources");
 const modal=document.getElementById("modal"),body=document.getElementById("modalBody");
-function preview(name,url,type){document.getElementById("modalTitle").textContent=name;body.innerHTML=type==="PDF"?'<embed class="preview-frame" type="application/pdf" src="'+url+'">':'<img class="preview-image" src="'+url+'" alt="'+name+'">';modal.classList.add("open")}
+function siteUrl(path){return site+path.split("/").map(encodeURIComponent).join("/")} function preview(name,url,type){document.getElementById("modalTitle").textContent=name;body.innerHTML=type==="PDF"?'<iframe class="preview-frame" src="'+url+'"></iframe><div style="padding:10px;text-align:center"><a class="btn secondary small" target="_blank" rel="noopener" href="'+url+'">Abrir PDF en una pestaña ↗</a></div>':'<img class="preview-image" src="'+url+'" alt="'+name+'">';modal.classList.add("open")}
 document.getElementById("closeModal").onclick=()=>modal.classList.remove("open");modal.onclick=e=>{if(e.target===modal)modal.classList.remove("open")};
 fetch("https://api.github.com/repos/ricardoibarravargas11-hash/Base_de_Datos_2/contents/semanas/"+w).then(r=>r.ok?r.json():[]).then(xs=>{
  const fs=Array.isArray(xs)?xs.filter(x=>x.type==="file"):[];
  if(!fs.length){box.innerHTML='<div class="empty">Aún no hay recursos publicados en esta semana.</div>';return}
- box.innerHTML=fs.map(f=>{const type=(f.name.split(".").pop()||"FILE").toUpperCase();return '<div class="resource"><div><div class="type">'+type+'</div><strong>'+f.name+'</strong></div><button class="btn" data-url="'+encodeURIComponent(f.download_url)+'" data-name="'+encodeURIComponent(f.name)+'" data-type="'+type+'">Ver dentro del portal →</button></div>'}).join("");
+ box.innerHTML=fs.map(f=>{const type=(f.name.split(".").pop()||"FILE").toUpperCase();return '<div class="resource"><div><div class="type">'+type+'</div><strong>'+f.name+'</strong></div><button class="btn" data-url="'+encodeURIComponent(siteUrl(f.path))+'" data-name="'+encodeURIComponent(f.name)+'" data-type="'+type+'">Ver dentro del portal →</button></div>'}).join("");
  box.querySelectorAll("button").forEach(b=>b.onclick=()=>preview(decodeURIComponent(b.dataset.name),decodeURIComponent(b.dataset.url),b.dataset.type));
 }).catch(()=>box.innerHTML='<div class="empty">No se pudo consultar el contenido en este momento.</div>');
 </script></body></html>
