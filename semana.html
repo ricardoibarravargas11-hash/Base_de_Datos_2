@@ -9,7 +9,7 @@ document.getElementById("unit").textContent="UNIDAD "+String(u).padStart(2,"0")+
 document.getElementById("title").textContent="Semana "+w;
 const box=document.getElementById("resources");
 const modal=document.getElementById("modal"),body=document.getElementById("modalBody");
-function preview(name,url,type){document.getElementById("modalTitle").textContent=name;body.innerHTML=type==="PDF"?'<iframe class="preview-frame" src="'+url+'"></iframe>':'<img class="preview-image" src="'+url+'" alt="'+name+'">';modal.classList.add("open")}
+function preview(name,url,type){document.getElementById("modalTitle").textContent=name;body.innerHTML=type==="PDF"?'<iframe class="preview-frame" src="https://docs.google.com/gview?embedded=1&url='+encodeURIComponent(url)+'"></iframe>':'<img class="preview-image" src="'+url+'" alt="'+name+'">';modal.classList.add("open")}
 document.getElementById("closeModal").onclick=()=>modal.classList.remove("open");modal.onclick=e=>{if(e.target===modal)modal.classList.remove("open")};
 fetch("https://api.github.com/repos/ricardoibarravargas11-hash/Base_de_Datos_2/contents/semanas/"+w).then(r=>r.ok?r.json():[]).then(xs=>{
  const fs=Array.isArray(xs)?xs.filter(x=>x.type==="file"):[];
