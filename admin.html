@@ -1,1 +1,128 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Administrador | BD II</title><link rel="stylesheet" href="style.css"></head><body><header class="site-header"><div class="nav"><a class="brand" href="index.html"><span class="brand-mark">BD</span><span>BASE DE DATOS II<small>PANEL ADMINISTRADOR</small></span></a><nav class="navlinks"><a href="index.html">Ver portal</a></nav></div></header><main><div class="form"><p class="eyebrow">Gestión de recursos</p><h1>Publicar material</h1><p class="lead">Selecciona una semana y carga uno o varios PDF o imágenes. Cada archivo quedará guardado en su carpeta correspondiente de GitHub.</p><div class="card"><div class="field"><label for="token">Token de GitHub</label><input id="token" type="password" placeholder="Pega aquí tu token" autocomplete="off"></div><div class="field"><label for="week">Semana de destino</label><select id="week"><option value="1">Semana 1</option><option value="2">Semana 2</option><option value="3">Semana 3</option><option value="4">Semana 4</option><option value="5">Semana 5</option><option value="6">Semana 6</option><option value="7">Semana 7</option><option value="8">Semana 8</option><option value="9">Semana 9</option><option value="10">Semana 10</option><option value="11">Semana 11</option><option value="12">Semana 12</option><option value="13">Semana 13</option><option value="14">Semana 14</option><option value="15">Semana 15</option><option value="16">Semana 16</option></select></div><div class="field"><label>Archivos</label><div class="drop"><input id="files" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" multiple><p id="status" class="status">Puedes seleccionar varios archivos a la vez · máximo 8 MB por archivo.</p></div></div><button class="btn" id="upload">Publicar en GitHub →</button></div><div class="banner"><h2>Organización automática</h2><p>Los recursos se almacenan como <strong>semanas/1</strong> hasta <strong>semanas/16</strong>. El portal los detecta y los muestra automáticamente en la página de cada semana.</p></div></div></main><footer>Panel de administración · Base de Datos II</footer><script>const owner="ricardoibarravargas11-hash",repo="Base_de_Datos_2",branch="main",api="https://api.github.com",el=id=>document.getElementById(id);el("files").onchange=()=>el("status").textContent=[...el("files").files].map(f=>f.name).join(" · ")||"No hay archivos seleccionados";const ok=f=>/^(application\/pdf|image\/(jpeg|png|webp))$/i.test(f.type)||/\.(pdf|jpe?g|png|webp)$/i.test(f.name),b64=f=>new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result.split(",")[1]);r.onerror=reject;r.readAsDataURL(f)});el("upload").onclick=async()=>{const token=el("token").value.trim(),files=[...el("files").files],week=el("week").value;if(!token)return el("status").textContent="Ingresa tu token de GitHub.";if(!files.length)return el("status").textContent="Selecciona al menos un archivo.";if(files.some(f=>!ok(f)))return el("status").textContent="Solo PDF, JPG, JPEG, PNG o WEBP.";if(files.some(f=>f.size>8*1024*1024))return el("status").textContent="Un archivo supera 8 MB.";el("upload").disabled=true;try{for(const f of files){const safe=f.name.replace(/[^a-zA-Z0-9._-]/g,"_"),path="semanas/"+week+"/"+safe,q=await fetch(api+"/repos/"+owner+"/"+repo+"/contents/"+path,{headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json"}});let sha;if(q.ok)sha=(await q.json()).sha;const body={message:"BD II: "+safe+" - Semana "+week,content:await b64(f),branch};if(sha)body.sha=sha;const put=await fetch(api+"/repos/"+owner+"/"+repo+"/contents/"+path,{method:"PUT",headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json","Content-Type":"application/json"},body:JSON.stringify(body)});if(!put.ok)throw new Error((await put.json()).message||"GitHub rechazó el archivo")}el("status").textContent="✓ Publicación completada en Semana "+week+".";el("files").value=""}catch(e){el("status").textContent="Error: "+e.message}finally{el("upload").disabled=false}};</script></body></html>
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Administrador | BD II</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header class="site-header"><div class="nav"><a class="brand" href="index.html"><span class="brand-mark">BD</span><span>BASE DE DATOS II<small>PANEL ADMINISTRADOR</small></span></a><nav class="navlinks"><a href="index.html">Ver portal</a></nav></div></header>
+<main>
+<div class="section-head" style="margin-top:0"><div><p class="eyebrow">Centro de administración</p><h1>Gestiona tu portal</h1><p class="lead">Publica, visualiza, elimina recursos y modifica los textos principales sin editar el código manualmente.</p></div></div>
+<div class="admin-grid">
+<section class="admin-panel">
+<h2>📚 Recursos</h2>
+<div class="field"><label for="token">Token de GitHub</label><input id="token" type="password" placeholder="Pega aquí tu token" autocomplete="off"></div>
+<div class="field"><label for="week">Semana de destino</label><select id="week"><option value="1">Semana 1</option><option value="2">Semana 2</option><option value="3">Semana 3</option><option value="4">Semana 4</option><option value="5">Semana 5</option><option value="6">Semana 6</option><option value="7">Semana 7</option><option value="8">Semana 8</option><option value="9">Semana 9</option><option value="10">Semana 10</option><option value="11">Semana 11</option><option value="12">Semana 12</option><option value="13">Semana 13</option><option value="14">Semana 14</option><option value="15">Semana 15</option><option value="16">Semana 16</option></select></div>
+<div class="field"><label>Archivos nuevos</label><div class="drop"><input id="files" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" multiple><p id="status" class="status">PDF, JPG, JPEG, PNG o WEBP · máximo 8 MB por archivo.</p></div></div>
+<button class="btn" id="upload">Publicar archivos →</button>
+<hr style="border-color:var(--line);margin:25px 0">
+<h3>Archivos publicados</h3>
+<div id="manage" class="manage-list"><div class="empty">Selecciona una semana para cargar sus archivos.</div></div>
+</section>
+<section class="admin-panel">
+<h2>✏️ Editar textos</h2>
+<p class="save-note">Los cambios se guardan en <strong>contenido.json</strong> y se reflejan en Inicio y las páginas de unidades.</p>
+<div class="edit-grid">
+<div class="field"><label>Título del curso</label><input id="courseTitle"></div>
+<div class="field"><label>Descripción principal</label><textarea id="courseLead"></textarea></div>
+<div class="field"><label>Objetivo del portafolio</label><textarea id="courseObjective"></textarea></div>
+<div class="field"><label>Unidad 1</label><input id="u1name"><textarea id="u1desc" placeholder="Descripción"></textarea></div>
+<div class="field"><label>Unidad 2</label><input id="u2name"><textarea id="u2desc" placeholder="Descripción"></textarea></div>
+<div class="field"><label>Unidad 3</label><input id="u3name"><textarea id="u3desc" placeholder="Descripción"></textarea></div>
+<div class="field"><label>Unidad 4</label><input id="u4name"><textarea id="u4desc" placeholder="Descripción"></textarea></div>
+</div>
+<button class="btn" id="saveText">Guardar cambios de texto →</button>
+<p id="textStatus" class="status"></p>
+</section>
+</div>
+<div class="banner"><h2>Importante</h2><p>El token solo se usa en esta sesión del navegador y no se guarda en el repositorio. Para publicar y eliminar necesitas un token con acceso al repositorio y <strong>Contents: Read and write</strong>.</p></div>
+</main>
+<div id="modal" class="modal" role="dialog" aria-modal="true"><div class="modal-box"><div class="modal-head"><strong id="modalTitle">Vista previa</strong><button class="modal-close" id="closeModal">Cerrar ✕</button></div><div id="modalBody" style="flex:1;min-height:0"></div></div></div>
+<footer>Panel de administración · Base de Datos II</footer>
+<script>
+const owner="ricardoibarravargas11-hash",repo="Base_de_Datos_2",branch="main",api="https://api.github.com";
+const $=id=>document.getElementById(id), token=()=>$("token").value.trim();
+const headers=()=>({Authorization:"Bearer "+token(),Accept:"application/vnd.github+json"});
+const status=(msg,err=false)=>{ $("status").textContent=msg; $("status").style.color=err?"#ff7f8b":"var(--muted)"; };
+const textStatus=(msg,err=false)=>{ $("textStatus").textContent=msg; $("textStatus").style.color=err?"#ff7f8b":"var(--muted)"; };
+const valid=f=>/^(application\/pdf|image\/(jpeg|png|webp))$/i.test(f.type)||/\.(pdf|jpe?g|png|webp)$/i.test(f.name);
+const b64=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(",")[1]);r.onerror=rej;r.readAsDataURL(f)});
+async function apiError(r){let j={};try{j=await r.json()}catch{};return j.message||("HTTP "+r.status)}
+function showPreview(name,url,type){
+ $("modalTitle").textContent=name; const b=$("modalBody"); b.innerHTML="";
+ if(type==="PDF") b.innerHTML='<iframe class="preview-frame" src="'+url+'"></iframe>';
+ else b.innerHTML='<img class="preview-image" src="'+url+'" alt="'+name+'">';
+ $("modal").classList.add("open");
+}
+$("closeModal").onclick=()=>$("modal").classList.remove("open");
+$("modal").onclick=e=>{if(e.target===$("modal"))$("modal").classList.remove("open")};
+async function loadFiles(){
+ const w=$("week").value, box=$("manage"); box.innerHTML='<div class="empty">Cargando…</div>';
+ try{
+  const r=await fetch(api+"/repos/"+owner+"/"+repo+"/contents/semanas/"+w,{headers:token()?headers():{Accept:"application/vnd.github+json"}});
+  if(!r.ok){box.innerHTML='<div class="empty">No se pudieron consultar los archivos.</div>';return}
+  const xs=await r.json(), fs=Array.isArray(xs)?xs.filter(x=>x.type==="file"):[];
+  if(!fs.length){box.innerHTML='<div class="empty">Esta semana todavía no tiene archivos.</div>';return}
+  box.innerHTML=fs.map(f=>{
+    const ext=(f.name.split(".").pop()||"").toUpperCase(), url=f.download_url||f.html_url;
+    return '<div class="manage-item"><div><div class="type">'+ext+'</div><strong>'+f.name+'</strong></div><div class="manage-actions">'+
+      '<button class="btn secondary small" data-preview="'+encodeURIComponent(url)+'" data-name="'+encodeURIComponent(f.name)+'" data-type="'+ext+'">Ver</button>'+
+      '<button class="btn danger small" data-delete="'+encodeURIComponent(f.path)+'" data-name="'+encodeURIComponent(f.name)+'">Eliminar</button></div></div>';
+  }).join("");
+  box.querySelectorAll("[data-preview]").forEach(b=>b.onclick=()=>showPreview(decodeURIComponent(b.dataset.name),decodeURIComponent(b.dataset.preview),b.dataset.type));
+  box.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>deleteFile(decodeURIComponent(b.dataset.delete),decodeURIComponent(b.dataset.name)));
+ }catch(e){box.innerHTML='<div class="empty">Error de conexión.</div>'}
+}
+async function deleteFile(path,name){
+ if(!token()){status("Ingresa tu token antes de eliminar.",true);return}
+ if(!confirm("¿Eliminar definitivamente '"+name+"' de GitHub?")) return;
+ status("Eliminando "+name+"…");
+ try{
+  const g=await fetch(api+"/repos/"+owner+"/"+repo+"/contents/"+path.split("/").map(encodeURIComponent).join("/"),{headers:headers()});
+  if(!g.ok)throw new Error(await apiError(g));
+  const file=await g.json();
+  const d=await fetch(api+"/repos/"+owner+"/"+repo+"/contents/"+path.split("/").map(encodeURIComponent).join("/"),{method:"DELETE",headers:{...headers(),"Content-Type":"application/json"},body:JSON.stringify({message:"BD II: eliminar "+name,sha:file.sha,branch})});
+  if(!d.ok)throw new Error(await apiError(d));
+  status("✓ Archivo eliminado.");
+  loadFiles();
+ }catch(e){status("Error al eliminar: "+e.message,true)}
+}
+$("files").onchange=()=>status([...$("files").files].map(f=>f.name).join(" · ")||"No hay archivos seleccionados");
+$("week").onchange=loadFiles;
+$("upload").onclick=async()=>{
+ const files=[...$("files").files],w=$("week").value;
+ if(!token())return status("Ingresa tu token de GitHub.",true);
+ if(!files.length)return status("Selecciona al menos un archivo.",true);
+ if(files.some(f=>!valid(f)))return status("Solo PDF, JPG, JPEG, PNG o WEBP.",true);
+ if(files.some(f=>f.size>8*1024*1024))return status("Un archivo supera 8 MB.",true);
+ $("upload").disabled=true; status("Publicando…");
+ try{
+  for(const f of files){
+   const safe=f.name.replace(/[^a-zA-Z0-9._-]/g,"_"),path="semanas/"+w+"/"+safe;
+   const q=await fetch(api+"/repos/"+owner+"/"+repo+"/contents/"+path.split("/").map(encodeURIComponent).join("/"),{headers:headers()});
+   let sha;if(q.ok)sha=(await q.json()).sha;
+   const body={message:"BD II: "+safe+" - Semana "+w,content:await b64(f),branch};if(sha)body.sha=sha;
+   const put=await fetch(api+"/repos/"+owner+"/"+repo+"/contents/"+path.split("/").map(encodeURIComponent).join("/"),{method:"PUT",headers:{...headers(),"Content-Type":"application/json"},body:JSON.stringify(body)});
+   if(!put.ok)throw new Error(await apiError(put));
+  }
+  status("✓ Publicación completada en Semana "+w+".");$("files").value="";loadFiles();
+ }catch(e){status("Error: "+e.message,true)}finally{$("upload").disabled=false}
+};
+async function loadContent(){
+ try{
+  const r=await fetch("contenido.json?"+Date.now()); const c=await r.json();
+  $("courseTitle").value=c.course.title;$("courseLead").value=c.course.lead;$("courseObjective").value=c.course.objective;
+  c.units.forEach((u,i)=>{$("u"+(i+1)+"name").value=u.name;$("u"+(i+1)+"desc").value=u.description});
+ }catch(e){textStatus("No se pudo cargar el contenido.",true)}
+}
+$("saveText").onclick=async()=>{
+ if(!token())return textStatus("Ingresa tu token de GitHub.",true);
+ try{
+  const g=await fetch(api+"/repos/"+owner+"/"+repo+"/contents/contenido.json",{headers:headers()});
+  if(!g.ok)throw new Error(await apiError(g)); const file=await g.json();
+  const c={course:{title:$("courseTitle").value.trim(),lead:$("courseLead").value.trim(),objective:$("courseObjective").value.trim()},units:[],weeks:[]};
+  for(let i=1;i<=4;i++)c.units.push({name:$("u"+i+"name").value.trim(),description:$("u"+i+"desc").value.trim(),range:["Semanas 1–4","Semanas 5–8","Semanas 9–12","Semanas 13–16"][i-1]});
+  c.weeks=Array.from({length:16},(_,i)=>"Recursos académicos y material disponible.");
+  const put=await fetch(api+"/repos/"+owner+"/"+repo+"/contents/contenido.json",{method:"PUT",headers:{...headers(),"Content-Type":"application/json"},body:JSON.stringify({message:"BD II: actualizar textos del portal",content:btoa(unescape(encodeURIComponent(JSON.stringify(c,null,2)))),sha:file.sha,branch})});
+  if(!put.ok)throw new Error(await apiError(put)); textStatus("✓ Textos guardados. Recarga el portal para verlos.");
+ }catch(e){textStatus("Error: "+e.message,true)}
+};
+loadContent();loadFiles();
+</script></body></html>
