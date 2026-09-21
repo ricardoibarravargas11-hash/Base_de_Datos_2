@@ -1,0 +1,47 @@
+{
+  "course": {
+    "title": "Base de Datos II",
+    "lead": "Un espacio académico para organizar, consultar y presentar los recursos del curso: materiales de clase, documentos, imágenes y evidencias distribuidos a lo largo de 16 semanas.",
+    "objective": "Centralizar el material del curso en una estructura clara, navegable y fácil de actualizar, manteniendo cada recurso asociado a su semana correspondiente."
+  },
+  "units": [
+    {
+      "name": "Arquitectura y configuración",
+      "description": "Fundamentos, arquitectura y configuración de entornos de bases de datos.",
+      "range": "Semanas 1–4"
+    },
+    {
+      "name": "Administración y almacenamiento",
+      "description": "Organización, administración y gestión de recursos de almacenamiento.",
+      "range": "Semanas 5–8"
+    },
+    {
+      "name": "Seguridad y alta disponibilidad",
+      "description": "Seguridad, acceso, continuidad y disponibilidad de los servicios.",
+      "range": "Semanas 9–12"
+    },
+    {
+      "name": "Monitoreo y recuperación",
+      "description": "Supervisión, mantenimiento, respaldo y recuperación de información.",
+      "range": "Semanas 13–16"
+    }
+  ],
+  "weeks": [
+    "Recursos académicos y material disponible.",
+    "Recursos académicos y material disponible.",
+    "Recursos académicos y material disponible.",
+    "Recursos académicos y material disponible.",
+    "Recursos académicos y material disponible.",
+    "Recursos académicos y material disponible.",
+    "Recursos académicos y material disponible.",
+    "Recursos académicos y material disponible.",
+    "Recursos académicos y material disponible.",
+    "Recursos académicos y material disponible.",
+    "Recursos académicos y material disponible.",
+    "Recursos académicos y material disponible.",
+    "Recursos académicos y material disponible.",
+    "Recursos académicos y material disponible.",
+    "Recursos académicos y material disponible.",
+    "Recursos académicos y material disponible."
+  ]
+}
