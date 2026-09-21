@@ -47,7 +47,7 @@ const b64=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r
 async function apiError(r){let j={};try{j=await r.json()}catch{};return j.message||("HTTP "+r.status)}
 function showPreview(name,url,type){
  $("modalTitle").textContent=name; const b=$("modalBody"); b.innerHTML="";
- if(type==="PDF") b.innerHTML='<iframe class="preview-frame" src="'+url+'"></iframe>';
+ if(type==="PDF") b.innerHTML='<iframe class="preview-frame" src="https://docs.google.com/gview?embedded=1&url='+encodeURIComponent(url)+'"></iframe><div style="padding:10px;text-align:center"><a class="btn secondary small" target="_blank" rel="noopener" href="'+url+'">Abrir PDF en una pestaña ↗</a></div>';
  else b.innerHTML='<img class="preview-image" src="'+url+'" alt="'+name+'">';
  $("modal").classList.add("open");
 }
@@ -64,24 +64,20 @@ async function loadFiles(){
     const ext=(f.name.split(".").pop()||"").toUpperCase(), url=f.download_url||f.html_url;
     return '<div class="manage-item"><div><div class="type">'+ext+'</div><strong>'+f.name+'</strong></div><div class="manage-actions">'+
       '<button class="btn secondary small" data-preview="'+encodeURIComponent(url)+'" data-name="'+encodeURIComponent(f.name)+'" data-type="'+ext+'">Ver</button>'+
-      '<button class="btn danger small" data-delete="'+encodeURIComponent(f.path)+'" data-name="'+encodeURIComponent(f.name)+'">Eliminar</button></div></div>';
+      '<button class="btn danger small" data-delete="'+encodeURIComponent(f.path)+'" data-sha="'+encodeURIComponent(f.sha)+'" data-name="'+encodeURIComponent(f.name)+'">Eliminar</button></div></div>';
   }).join("");
   box.querySelectorAll("[data-preview]").forEach(b=>b.onclick=()=>showPreview(decodeURIComponent(b.dataset.name),decodeURIComponent(b.dataset.preview),b.dataset.type));
-  box.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>deleteFile(decodeURIComponent(b.dataset.delete),decodeURIComponent(b.dataset.name)));
+  box.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>deleteFile(decodeURIComponent(b.dataset.delete),decodeURIComponent(b.dataset.name),decodeURIComponent(b.dataset.sha)));
  }catch(e){box.innerHTML='<div class="empty">Error de conexión.</div>'}
 }
-async function deleteFile(path,name){
+async function deleteFile(path,name,sha){
  if(!token()){status("Ingresa tu token antes de eliminar.",true);return}
  if(!confirm("¿Eliminar definitivamente '"+name+"' de GitHub?")) return;
  status("Eliminando "+name+"…");
  try{
-  const g=await fetch(api+"/repos/"+owner+"/"+repo+"/contents/"+path.split("/").map(encodeURIComponent).join("/"),{headers:headers()});
-  if(!g.ok)throw new Error(await apiError(g));
-  const file=await g.json();
-  const d=await fetch(api+"/repos/"+owner+"/"+repo+"/contents/"+path.split("/").map(encodeURIComponent).join("/"),{method:"DELETE",headers:{...headers(),"Content-Type":"application/json"},body:JSON.stringify({message:"BD II: eliminar "+name,sha:file.sha,branch})});
+  const d=await fetch(api+"/repos/"+owner+"/"+repo+"/contents/"+path.split("/").map(encodeURIComponent).join("/"),{method:"DELETE",headers:{...headers(),"Content-Type":"application/json"},body:JSON.stringify({message:"BD II: eliminar "+name,sha,branch})});
   if(!d.ok)throw new Error(await apiError(d));
-  status("✓ Archivo eliminado.");
-  loadFiles();
+  status("✓ Archivo eliminado."); loadFiles();
  }catch(e){status("Error al eliminar: "+e.message,true)}
 }
 $("files").onchange=()=>status([...$("files").files].map(f=>f.name).join(" · ")||"No hay archivos seleccionados");
