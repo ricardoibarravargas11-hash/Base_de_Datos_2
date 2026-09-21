@@ -37,7 +37,7 @@
 <div id="modal" class="modal" role="dialog" aria-modal="true"><div class="modal-box"><div class="modal-head"><strong id="modalTitle">Vista previa</strong><button class="modal-close" id="closeModal">Cerrar ✕</button></div><div id="modalBody" style="flex:1;min-height:0"></div></div></div>
 <footer>Panel de administración · Base de Datos II</footer>
 <script>
-const owner="ricardoibarravargas11-hash",repo="Base_de_Datos_2",branch="main",api="https://api.github.com";
+const owner="ricardoibarravargas11-hash",repo="Base_de_Datos_2",branch="main",api="https://api.github.com",site="https://ricardoibarravargas11-hash.github.io/Base_de_Datos_2/";
 const $=id=>document.getElementById(id), token=()=>$("token").value.trim();
 const headers=()=>({Authorization:"Bearer "+token(),Accept:"application/vnd.github+json"});
 const status=(msg,err=false)=>{ $("status").textContent=msg; $("status").style.color=err?"#ff7f8b":"var(--muted)"; };
@@ -45,7 +45,7 @@ const textStatus=(msg,err=false)=>{ $("textStatus").textContent=msg; $("textStat
 const valid=f=>/^(application\/pdf|image\/(jpeg|png|webp))$/i.test(f.type)||/\.(pdf|jpe?g|png|webp)$/i.test(f.name);
 const b64=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(",")[1]);r.onerror=rej;r.readAsDataURL(f)});
 async function apiError(r){let j={};try{j=await r.json()}catch{};return j.message||("HTTP "+r.status)}
-function showPreview(name,url,type){
+function siteUrl(path){return site+path.split("/").map(encodeURIComponent).join("/")} function showPreview(name,url,type){
  $("modalTitle").textContent=name; const b=$("modalBody"); b.innerHTML="";
  if(type==="PDF") b.innerHTML='<embed class="preview-frame" type="application/pdf" src="'+url+'"><div style="padding:10px;text-align:center"><a class="btn secondary small" target="_blank" rel="noopener" href="'+url+'">Abrir PDF en una pestaña ↗</a></div>';
  else b.innerHTML='<img class="preview-image" src="'+url+'" alt="'+name+'">';
@@ -61,7 +61,7 @@ async function loadFiles(){
   const xs=await r.json(), fs=Array.isArray(xs)?xs.filter(x=>x.type==="file"):[];
   if(!fs.length){box.innerHTML='<div class="empty">Esta semana todavía no tiene archivos.</div>';return}
   box.innerHTML=fs.map(f=>{
-    const ext=(f.name.split(".").pop()||"").toUpperCase(), url=f.download_url||f.html_url;
+    const ext=(f.name.split(".").pop()||"").toUpperCase(), url=siteUrl(f.path);
     return '<div class="manage-item"><div><div class="type">'+ext+'</div><strong>'+f.name+'</strong></div><div class="manage-actions">'+
       '<button class="btn secondary small" data-preview="'+encodeURIComponent(url)+'" data-name="'+encodeURIComponent(f.name)+'" data-type="'+ext+'">Ver</button>'+
       '<button class="btn danger small" data-delete="'+encodeURIComponent(f.path)+'" data-sha="'+encodeURIComponent(f.sha)+'" data-name="'+encodeURIComponent(f.name)+'">Eliminar</button></div></div>';
